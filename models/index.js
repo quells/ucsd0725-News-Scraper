@@ -2,10 +2,11 @@ const mongoose = require("mongoose")
 
 const mongoURI = process.env.MONGODB_URI || "mongodb://localhost/scraper"
 mongoose.connect(mongoURI, {useMongoClient: true})
-mongoose.promise = global.Promise
+mongoose.Promise = global.Promise
+
+const articleSchema = require("./article")(mongoose)
 
 module.exports = {
   mongoose: mongoose,
-  article: require("./article")(mongoose),
-  comment: require("./comment")(mongoose),
+  Article: mongoose.model("Article", articleSchema),
 }
