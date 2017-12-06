@@ -5,10 +5,6 @@ module.exports = function(mongoose) {
     author: String,
     originalURL: {type: String, index: {unique: true}},
     dateCollected: {type: Date, default: Date.now},
-    comments: [{
-      user: String,
-      body: String,
-      date: Date
-    }]
+    comments: [{type: mongoose.Schema.Types.ObjectId, ref: "Comment"}]
   })
 }
