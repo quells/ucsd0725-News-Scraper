@@ -16,10 +16,9 @@ router.get("/articles", (req, res) => {
   // Can offset number of returned articles, defaulting to 0 if no value provided
   // eg /api/articles?limit=5&offset=5 returns articles 6-10
   let offset = 0
-  if (req.query.limit != undefined) {
+  if (req.query.offset != undefined) {
     offset = Math.max(0, parseInt(req.query.offset))
   }
-
 
   // Return N articles sorted newest-first in alphabetical order
   Article.find({})
