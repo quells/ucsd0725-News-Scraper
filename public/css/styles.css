@@ -1,0 +1,5 @@
+/* Sticky Footer */
+html, body { height: 100%; }
+body { display: flex; flex-direction: column; }
+main { flex: 1 0 auto; }
+footer { margin-top: 2rem; padding-top: 1rem; padding-bottom: 1rem;}
