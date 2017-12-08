@@ -4,6 +4,17 @@ body { display: flex; flex-direction: column; }
 main { flex: 1 0 auto; }
 footer { margin-top: 2rem; padding-top: 1rem; padding-bottom: 1rem;}
 
+/* Header */
+.header-link,
+.header-link:hover {
+  color: black;
+}
+
+.ars-link,
+.ars-link:hover {
+  color: #FB3506;
+}
+
 /* Comment Button */
 .commentBtn {
   width: 5rem;
@@ -12,5 +23,19 @@ footer { margin-top: 2rem; padding-top: 1rem; padding-bottom: 1rem;}
   float: left;
 }
 .commentBtn span {
+  float: right;
+}
+
+/* Article View */
+
+.comment p {
+  padding-top: 1rem;
+}
+
+.comment:nth-of-type(even) {
+  background: #eee;
+}
+
+.delete-comment {
   float: right;
 }

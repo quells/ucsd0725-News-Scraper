@@ -16,15 +16,16 @@ router.get("/articles", (req, res) => {
   }
 
   // Return N articles sorted newest-first in alphabetical order
-  db.getArticles(req.query.limit, offset)
+  db.getArticles(req.query.limit, req.query.offset)
     .then(articles => {
-      let results = articles.slice(offset)
+      articles = articles.slice(offset)
       res.json({
         error: false,
-        articles: results
+        articles: articles
       })
     })
     .catch(err => {
+      console.trace(err)
       res.json({
         error: true,
         errorMsg: err.message
@@ -59,6 +60,29 @@ router.get("/articles/new", (req, res) => {
         error: true,
         errorMsg: err
       })
+    })
+})
+
+router.post("/comment/:articleId", (req, res) => {
+  let comment = req.body
+  db.addComment(req.params.articleId, comment)
+    .then(response => {
+      res.sendStatus(200)
+    })
+    .catch(err => {
+      console.trace(err)
+      res.sendStatus(500)
+    })
+})
+
+router.delete("/comment/:commentId", (req, res) => {
+  db.removeComment(req.params.commentId)
+    .then(response => {
+      res.sendStatus(200)
+    })
+    .catch(err => {
+      console.trace(err)
+      res.sendStatus(500)
     })
 })
 

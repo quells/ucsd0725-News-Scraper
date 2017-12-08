@@ -7,24 +7,35 @@ mongoose.connect(mongoURI, {useMongoClient: true})
 let Article = mongoose.model("Article", require("./article")(mongoose))
 let Comment = mongoose.model("Comment", require("./comment")(mongoose))
 
+function _getArticles(limit, offset) {
+  limit = Math.max(1, Math.min(limit || 10, 50)) // should be in the range [1, 50]
+  return Article.find({})
+    .limit(limit + offset)
+    .sort({
+      dateCollected: -1,
+      title: 1
+    })
+}
+
 module.exports = {
   mongoose: mongoose,
   Article: Article,
   Comment: Comment,
-  getArticles: function(limit, offset) {
-    limit = Math.max(1, Math.min(limit || 10, 50))
-    offset = Math.max(0, offset || 0)
-    return Article.find({})
-      .populate("Comment")
-      .limit(limit + offset)
-      .sort({
-        dateCollected: -1,
-        title: 1
+  getArticle: function(articleId) {
+    return Article.findById(articleId).populate("comments")
+  },
+  getArticles: function(limit, offset, withComments) {
+    offset = Math.max(0, offset || 0) // should not be negative
+    let query = _getArticles(limit, offset)
+    withComments = withComments || false
+    if (withComments) { query.populate("Comment") }
+
+    return query.exec((err, results) => {
+      return new Promise((resolve, reject) => {
+        if (err != undefined) return reject(err)
+        resolve(results)
       })
-      .exec((err, results) => {
-        if (err != undefined) throw err
-        return results
-      })
+    })
   },
   addArticle: function(articleData) {
     let article = new Article(articleData)
@@ -44,6 +55,19 @@ module.exports = {
           return Promise.resolve()
         }
         throw err
+      })
+  },
+  addComment: function(articleId, comment) {
+    return Comment.create(comment)
+      .then(dbComment => {
+        return Article.findById(articleId)
+          .update({$push: {comments: dbComment._id}})
+      })
+  },
+  removeComment: function(commentId) {
+    return Comment.remove({_id: commentId})
+      .then(dbComment => {
+        return Article.update({comments: commentId}, {$pullAll: {comments: [commentId]}})
       })
   }
 }
