@@ -3,3 +3,14 @@ html, body { height: 100%; }
 body { display: flex; flex-direction: column; }
 main { flex: 1 0 auto; }
 footer { margin-top: 2rem; padding-top: 1rem; padding-bottom: 1rem;}
+
+/* Comment Button */
+.commentBtn {
+  width: 5rem;
+}
+.commentBtn i {
+  float: left;
+}
+.commentBtn span {
+  float: right;
+}
